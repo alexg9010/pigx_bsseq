@@ -158,4 +158,3 @@ snakemake -s BSseq_pipeline.py --configfile $path2configfile -d $pathout $snakep
 
 
 
-
