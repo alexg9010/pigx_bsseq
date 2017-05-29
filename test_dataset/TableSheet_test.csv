@@ -17,4 +17,4 @@ output2K_1.fq.gz,,sampleB,WGBS,B
 
 
 [[ DIFFERENTIAL METHYLATION ]]
-sampleB, sampleB1
+A, B
