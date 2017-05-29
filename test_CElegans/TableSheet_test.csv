@@ -17,4 +17,4 @@ SEtest.fq.gz,,SEsample_test,WGBS,B
 
 
 [[ DIFFERENTIAL METHYLATION ]]
-sampleB, sampleB1
+A, B
