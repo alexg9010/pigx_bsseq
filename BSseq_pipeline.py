@@ -97,7 +97,6 @@ OUTPUT_FILES = [
                 # ==================  FINAL REPORT =========================
                 # TODO: This needs to be editted once we determine what final reports we want to export!
 	            	#[ expand ( Annot(DIR_annot, config["SAMPLES"][sample]["files"], VERSION )) for sample in config["SAMPLES"]  ]
-		
 		            # diff meth
 		            # TODO: integrate it to the final report above somehow
 		            # diff meth
