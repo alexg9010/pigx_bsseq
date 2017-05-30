@@ -69,3 +69,13 @@ def Annot(PATH, files, assembly):
 def fmt(message):
     """Format the MESSAGE string."""
     return "----------  " + message + "  ----------"
+
+def bam_processing(PATH, files):
+    if len(files) == 1:
+      return  PATH+files[0]+"_se_bt2.deduped.sorted_meth_calls.nb.html" #---- single end
+    elif len(files) == 2:
+        return [PATH+files[0]+"_val_1_bt2.deduped.sorted_meth_calls.nb.html"] #---- paired end
+
+def DiffMeth(PATH, treatments, samples):
+    return [PATH+"_".join(treatments)+".sorted_diffmeth.nb.html"] 
+

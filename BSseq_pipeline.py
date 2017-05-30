@@ -14,11 +14,6 @@
  
 #============================================================================================================
 
-#------ set config file, include function definitions, and set os:
-import os
-include   : "./rules/post_mapping.rules"
-include   : "./scripts/func_defs.py"
-
 #---------------------------     LIST THE OUTPUT DIRECTORIED AND SUBDIRECTORIED TO BE PRODUCED     ------------------------------
 
 DIR_sorted='06_sorted/'
@@ -38,6 +33,11 @@ config["METHCALLDIR"] = METHCALLDIR
 config["SEGDIR"] = SEGDIR
 config["ANNODIR"] = DIR_annot
 config["DIFFMETHDIR"] = DIFFMETHDIR
+
+#------ set config file, include function definitions, and set os:
+import os
+include   : "./rules/post_mapping.rules"
+include   : "./scripts/func_defs.py"
 
 
 
@@ -92,10 +92,16 @@ OUTPUT_FILES = [
                 #               ==== rule 06 sorting ======
                 [ expand ( list_files_sortbam(DIR_sorted, config["SAMPLES"][sample]["files"], config["SAMPLES"][sample]["SampleID"]  )  ) for sample in config["SAMPLES"]  ],
                 
+                #               ==== rule Bam processing ======
+                [ expand ( bam_processing(METHCALLDIR, config["SAMPLES"][sampleID]["fastq_name"] )  ) for sampleID in config["SAMPLES"]  ] #had to add it to call bam_methCall for diff meth rule
+                
                 # ==================  FINAL REPORT =========================
                 # TODO: This needs to be editted once we determine what final reports we want to export!
-		#            [ expand ( Annot(DIR_annot, config["SAMPLES"][sample]["files"], VERSION )) for sample in config["SAMPLES"]  ]
-                
+	            	#[ expand ( Annot(DIR_annot, config["SAMPLES"][sample]["files"], VERSION )) for sample in config["SAMPLES"]  ]
+		
+		            # diff meth
+		            # TODO: integrate it to the final report above somehow
+		            #[ DIFFMETHDIR+"".join(x)+".sorted_diffmeth.nb.html" for x in config["DIFF_METH"]  ]
 
 ]
 
