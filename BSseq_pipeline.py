@@ -98,7 +98,7 @@ OUTPUT_FILES = [
                 [ expand ( list_files_sortbam(DIR_sorted, config["SAMPLES"][sampleID]["fastq_name"] )  ) for sampleID in config["SAMPLES"]  ],
                 
                 #               ==== rule Bam processing ======
-                [ expand ( bam_processing(METHCALLDIR, config["SAMPLES"][sampleID]["fastq_name"] )  ) for sampleID in config["SAMPLES"]  ] #had to add it to call bam_methCall for diff meth rule
+                [ expand ( bam_processing(METHCALLDIR, config["SAMPLES"][sampleID]["fastq_name"] )  ) for sampleID in config["SAMPLES"]  ], #had to add it to call bam_methCall for diff meth rule
                 
                 # ==================  FINAL REPORT =========================
                 # @@@! This needs to be editted once we determine what final reports we want to export!
@@ -106,7 +106,7 @@ OUTPUT_FILES = [
 		            
 		            # diff meth
 		            # TODO: integrate it to the final report above somehow
-		            #[ DIFFMETHDIR+"".join(x)+".sorted_diffmeth.nb.html" for x in config["DIFF_METH"]  ]
+		            [ DIFFMETHDIR+"-".join(x)+".sorted_diffmeth.nb.html" for x in config["DIFF_METH"]  ]
 
 
 ]
