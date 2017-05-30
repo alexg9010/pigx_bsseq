@@ -103,7 +103,6 @@ OUTPUT_FILES = [
                 # @@@! This needs to be editted once we determine what final reports we want to export!
 		            #[ expand ( Annot(DIR_annot, config["SAMPLES"][sampleID]["fastq_name"], VERSION )) for sampleID in config["SAMPLES"]  ],
 		            
-
 		            # TODO: integrate it to the final report above somehow
 		            # diff meth
 		            [ DIFFMETHDIR+"_".join(x)+".sorted_diffmeth.nb.html" for x in config["DIFF_METH"]  ],
