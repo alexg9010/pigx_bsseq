@@ -27,7 +27,18 @@ DIR_deduped='05_deduped/'
 DIR_posttrim_QC='03_posttrim_QC/'
 DIR_trimmed='02_trimmed/'
 DIR_rawqc='01_rawqc/'
-DIR_annot = 'annotation/'
+DIR_annot     = "annotation/"
+METHCALLDIR = "methylation_calls/"
+SEGDIR      = "segmentation/"
+DIFFMETHDIR = 'differential_methylation/'
+
+# a way to pass it to diff_meth.rules (and post_mapping.rules as well ??) #TODO: ask guys about it 
+config["DIR_sorted"] = DIR_sorted
+config["METHCALLDIR"] = METHCALLDIR
+config["SEGDIR"] = SEGDIR
+config["ANNODIR"] = DIR_annot
+config["DIFFMETHDIR"] = DIFFMETHDIR
+
 
 
 #---------------------------------     DEFINE PATHS AND FILE NAMES:  ----------------------------------
@@ -87,9 +98,13 @@ OUTPUT_FILES = [
                 [ expand ( list_files_sortbam(DIR_sorted, config["SAMPLES"][sampleID]["fastq_name"] )  ) for sampleID in config["SAMPLES"]  ],
                 
                 # ==================  FINAL REPORT =========================
-                # TODO: This needs to be editted once we determine what final reports we want to export!
-		#            [ expand ( Annot(DIR_annot, config["SAMPLES"][sampleID]["fastq_name"], VERSION )) for sampleID in config["SAMPLES"]  ]
-                
+                # @@@! This needs to be editted once we determine what final reports we want to export!
+		            #[ expand ( Annot(DIR_annot, config["SAMPLES"][sampleID]["fastq_name"], VERSION )) for sampleID in config["SAMPLES"]  ],
+		            
+		            # diff meth
+		            # TODO: integrate it to the final report above
+		            [ expand ( Annot(DIR_annot, config["SAMPLES"][sampleID]["fastq_name"], VERSION )) for sampleID in config["SAMPLES"]  ]
+
 
 ]
 
