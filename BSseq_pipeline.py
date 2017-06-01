@@ -101,8 +101,6 @@ OUTPUT_FILES = [
                 # TODO: This needs to be editted once we determine what final reports we want to export!
 	            	#[ expand ( Annot(DIR_annot, config["SAMPLES"][sample]["files"], VERSION )) for sample in config["SAMPLES"]  ]
 		            # diff meth
-		            # TODO: integrate it to the final report above somehow
-		            # diff meth
 		            [ DIFFMETHDIR+"_".join(x)+".sorted_diffmeth.nb.html" for x in config["DIFF_METH"]  ],
 		            # annotation diff meth regions
 		            [ DIR_annot+"_".join(x)+".sorted_"+config["GENOME_VERSION"]+"_annotation.diff.meth.nb.html" for x in config["DIFF_METH"]  ]
@@ -116,6 +114,9 @@ OUTPUT_FILES = [
 #--- (like in traffic). Generally set to maximally nice=19 to avoid interference with other users.
 def nice(cmd):
     return "nice -" + str(config["NICE"]) + " " + cmd
+
+print("OUTPUT_FILES")
+print(OUTPUT_FILES)
 
 # ==============================================================================================================
 #
