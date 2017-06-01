@@ -37,6 +37,7 @@ config["DIFFMETHDIR"] = DIFFMETHDIR
 #------ set config file, include function definitions, and set os:
 import os
 include   : "./rules/post_mapping.rules"
+include   : "./rules/diff_meth.rules"
 include   : "./scripts/func_defs.py"
 
 
@@ -101,7 +102,7 @@ OUTPUT_FILES = [
 		
 		            # diff meth
 		            # TODO: integrate it to the final report above somehow
-		            [ DIFFMETHDIR+"-".join(x)+".sorted_diffmeth.nb.html" for x in config["DIFF_METH"]  ]
+		            [ DIFFMETHDIR+"_".join(x)+".sorted_diffmeth.nb.html" for x in config["DIFF_METH"]  ]
 
 ]
 
@@ -172,7 +173,7 @@ rule deduplication_pe:
 
 # ==========================================================================================
 # align and map:
- 
+
 rule bismark_se:
     input:
         refconvert_CT = GENOMEPATH+"Bisulfite_Genome/CT_conversion/genome_mfa.CT_conversion.fa",
