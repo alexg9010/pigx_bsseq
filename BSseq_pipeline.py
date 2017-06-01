@@ -37,6 +37,7 @@ config["DIFFMETHDIR"] = DIFFMETHDIR
 #------ set config file, include function definitions, and set os:
 import os
 include   : "./rules/post_mapping.rules"
+include   : "./rules/diff_meth.rules"
 include   : "./scripts/func_defs.py"
 
 
@@ -95,7 +96,7 @@ OUTPUT_FILES = [
                 #[ expand ( list_files_dedupe(DIR_deduped, config["SAMPLES"][sampleID]["fastq_name"] )  ) for sampleID in config["SAMPLES"]  ],                                
 
                 #               ==== rule 06 sorting ======
-                [ expand ( list_files_sortbam(DIR_sorted, config["SAMPLES"][sampleID]["fastq_name"] )  ) for sampleID in config["SAMPLES"]  ],
+                #[ expand ( list_files_sortbam(DIR_sorted, config["SAMPLES"][sampleID]["fastq_name"] )  ) for sampleID in config["SAMPLES"]  ],
                 
                 #               ==== rule Bam processing ======
                 [ expand ( bam_processing(METHCALLDIR, config["SAMPLES"][sampleID]["fastq_name"] )  ) for sampleID in config["SAMPLES"]  ], #had to add it to call bam_methCall for diff meth rule
@@ -106,11 +107,14 @@ OUTPUT_FILES = [
 		            
 		            # diff meth
 		            # TODO: integrate it to the final report above somehow
-		            [ DIFFMETHDIR+"-".join(x)+".sorted_diffmeth.nb.html" for x in config["DIFF_METH"]  ]
+		            [ DIFFMETHDIR+"_".join(x)+".sorted_diffmeth.nb.html" for x in config["DIFF_METH"]  ]
 
 
 ]
 
+
+print("OUTPUT_FILES")
+print(OUTPUT_FILES)
 
 # ==============================================================================================================
 #
@@ -172,7 +176,7 @@ rule deduplication_pe:
 
 # ==========================================================================================
 # align and map:
- 
+
 rule bismark_se:
     input:
         refconvert_CT = GENOMEPATH+"Bisulfite_Genome/CT_conversion/genome_mfa.CT_conversion.fa",

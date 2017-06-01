@@ -73,11 +73,6 @@ def bam_processing(PATH, files):
         return [PATH+files[0]+"_val_1_bt2.deduped.sorted_meth_calls.nb.html"] #---- paired end
 
 
-def DiffMeth(PATH, treatments, samples):
-    return [PATH+"_".join(treatments)+".sorted_diffmeth.nb.html"] 
-
-
-
 
         
         
