@@ -163,6 +163,7 @@ rule deduplication_se:
     message: fmt("Deduplicating single-end read alignments")
     shell:
         nice("{SAMTOOLS} rmdup {input}  {output} 2> {log}")
+
 # #--------
 rule deduplication_pe:
     input:
