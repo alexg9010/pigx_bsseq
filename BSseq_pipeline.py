@@ -266,7 +266,8 @@ rule fastqc_after_trimming_pe:
 
 rule trimgalore_se:
     input:
-       PATHIN+"{sample}.fq.gz"
+       touch(DIR_rawqc+"{sample}_fastqc.html"),
+       file = PATHIN+"{sample}.fq.gz"
     output:
        DIR_trimmed+"{sample}_trimmed.fq.gz" #---- this ALWAYS outputs .fq.qz format.
     params:
@@ -280,13 +281,15 @@ rule trimgalore_se:
     message:
        " ---------  Trimming raw single-end read data using {TRIMGALORE} -------  "
     shell:
-       "nice -"+str(NICE)+" {TRIMGALORE} {params} {input} 2> {log}"
+       "nice -"+str(NICE)+" {TRIMGALORE} {params} {input.file} 2> {log}"
 
 #-----------------------
 rule trimgalore_pe:
     input:
-        PATHIN+"{sample}_1.fq.gz",
-        PATHIN+"{sample}_2.fq.gz"
+        touch(DIR_rawqc+"{sample}_1_fastqc.html"),
+        touch(DIR_rawqc+"{sample}_2_fastqc.html"),
+        files = [ PATHIN+"{sample}_1.fq.gz",
+                  PATHIN+"{sample}_2.fq.gz"]
     output:
         DIR_trimmed+"{sample}_1_val_1.fq.gz", #---- this ALWAYS outputs .fq.qz format.
         DIR_trimmed+"{sample}_2_val_2.fq.gz",
@@ -302,7 +305,7 @@ rule trimgalore_pe:
     message:
         " ---------  Trimming raw paired-end read data using {TRIMGALORE} -------  "
     shell:
-        "nice -"+str(NICE)+" {TRIMGALORE} {params} {input} 2> {log}"
+        "nice -"+str(NICE)+" {TRIMGALORE} {params} {input.files} 2> {log}"
 
 # ==========================================================================================
 # raw quality control
