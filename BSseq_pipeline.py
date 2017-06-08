@@ -177,7 +177,7 @@ rule bismark_se:
         DIR_mapped+"/{sample}_bismark_se_mapping.log"
     message: """-------------   Mapping single-end reads to genome {VERSION}. ------------- """
     shell:
-        "nice -"+str(NICE)+" {BISMARK} {params} {input.fqfile} 2> {log}"
+        "nice -"+str(NICE)+" {BISMARK} {params} {input.fqfile} &> {log}"
 
 #--------
 rule bismark_pe:
@@ -202,7 +202,7 @@ rule bismark_pe:
         DIR_mapped+"{sample}_bismark_pe_mapping.log"
     message: """-------------   Mapping paired-end reads to genome {VERSION}. ------------- """
     shell:
-        "nice -"+str(NICE)+" {BISMARK} {params}  -1 {input.fin1} -2 {input.fin2} 2> {log}"
+        "nice -"+str(NICE)+" {BISMARK} {params}  -1 {input.fin1} -2 {input.fin2} &> {log}"
 
 
 # ==========================================================================================
@@ -223,7 +223,7 @@ rule bismark_genome_preparation:
         'bismark_genome_preparation_'+VERSION+'.log'
     message: """ --------  converting {VERSION} Genome into Bisulfite analogue ------- """
     shell:
-        "nice -"+str(NICE)+" {BISMARK_GENOME_PREPARATION} {params} {input} 2> {log}"
+        "nice -"+str(NICE)+" {BISMARK_GENOME_PREPARATION} {params} {input} &> {log}"
 
 # ==========================================================================================
 # post-trimming quality control
