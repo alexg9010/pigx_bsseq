@@ -149,6 +149,13 @@ scripts/create_file_links.py $path2configfile
 
 
 #========================================================================================
+#----------  SET ABSOLUTE LOGO PATH:  ----------------------------------------------
+## only required once, 
+## will be removed when Rekado starts packaging 
+
+scripts/set_path2logo.sh images/Logo_PIGx.png report_templates/_pigx_bsseq_logo.html > report_templates/pigx_bsseq_logo.html
+
+#========================================================================================
 #----------  NOW START RUNNING SNAKEMAKE:  ----------------------------------------------
 
 
