@@ -155,4 +155,3 @@ pathout=$( python -c "import sys, json; print(json.load(sys.stdin)['PATHOUT'])" 
 snakemake -s BSseq_pipeline.py --configfile $path2configfile -d $pathout ${snakeparams:-}
 
 
-
