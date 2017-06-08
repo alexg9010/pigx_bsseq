@@ -67,5 +67,11 @@ def Annot(PATH, files, assembly):
         return [PATH+files[0]+"_val_1_bt2.deduped.sorted_"+assembly+"_annotation.nb.html"] #---- paired end
 
         
+def Final(PATH, files, assembly):
+    if len(files) == 1:
+      return  PATH+files[0]+"_se_bt2.deduped.sorted_"+assembly+"_final.nb.html" #---- single end
+    elif len(files) == 2:
+        return [PATH+files[0]+"_val_1_bt2.deduped.sorted_"+assembly+"_final.nb.html"] #---- paired end
+
         
         
