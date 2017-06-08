@@ -155,20 +155,57 @@ rule sortbam_pe:
 
 # ==========================================================================================
 # deduplicate the bam file:
-
-rule deduplication_se:
-    input:
-        DIR_mapped+"{sample}_trimmed_bismark_bt2.bam"
-    output:
-        DIR_deduped+"{sample}_se_bt2.deduped.bam"
-    params:
-        bam="--bam ",
-        sampath="--samtools_path "+SAMTOOLS
-    log:
-        DIR_deduped+"{sample}_deduplication.log"
-    message: """-----------   Deduplicating single-end read alignments ---------------------- """
-    shell:
-        "nice -"+str(NICE)+" {SAMTOOLS} rmdup {input}  {output} 2> {log}"
+# 
+# rule deduplication_se:
+#     input:
+#         DIR_mapped+"{sample}_trimmed_bismark_bt2.bam"
+#     output:
+#         DIR_deduped+"{sample}_se_bt2.deduped.bam"
+#     params:
+#         bam="--bam ",
+#         sampath="--samtools_path "+SAMTOOLS
+#     log:
+#         DIR_deduped+"{sample}_deduplication.log"
+#     message: """-----------   Deduplicating single-end read alignments ---------------------- """
+#     shell:
+#         "nice -"+str(NICE)+" {SAMTOOLS} rmdup {input}  {output} 2> {log}"
+# # #--------
+# rule deduplication_pe:
+#     input:
+#         DIR_mapped+"{sample}"+RCODE+"1_val_1_bismark_bt2_pe.bam"
+#     output:
+#         DIR_deduped+"{sample}"+RCODE+"1_val_1_bt2.deduped.bam"
+#     log:
+#         DIR_deduped+"{sample}_deduplication.log"
+#     message: """-----------   Deduplicating paired-end read alignments ---------------------- """
+#     shell:
+#         "nice -"+str(NICE)+" {SAMTOOLS} fixmate {input}  {output} 2> {log}"
+# 
+# # ==========================================================================================
+# # align and map:
+# 
+# rule bismark_se:
+#     input:
+#         refconvert_CT = GENOMEPATH+"Bisulfite_Genome/CT_conversion/genome_mfa.CT_conversion.fa",
+# 	refconvert_GA = GENOMEPATH+"Bisulfite_Genome/GA_conversion/genome_mfa.GA_conversion.fa",
+#         fqfile = DIR_trimmed+"{sample}_trimmed.fq.gz"
+#     output:
+#         DIR_mapped+"{sample}_trimmed_bismark_bt2.bam",
+#         DIR_mapped+"{sample}_trimmed_bismark_bt2_SE_report.txt"
+#     params:
+#         genomeFolder = "--genome_folder " + GENOMEPATH,
+#         outdir = "--output_dir  "+DIR_mapped,
+#         nucCov = "--nucleotide_coverage",
+#         pathToBowtie = "--path_to_bowtie "+ os.path.dirname(BOWTIE2) ,
+#         useBowtie2  = "--bowtie2 ",
+#         samtools    = "--samtools_path "+ os.path.dirname(SAMTOOLS),
+#         tempdir     = "--temp_dir "+PATHOUT
+#     log:
+#         PATHOUT+DIR_mapped+"/{sample}_bismark_se_mapping.log"
+#     message: """-------------   Mapping single-end reads to genome {VERSION}. ------------- """
+#     shell:
+#         "nice -"+str(NICE)+" {BISMARK} {params} "+config["bismark_args"]+" {input.fqfile} 2> {log}"
+# 
 # #--------
 rule deduplication_pe:
     input:
