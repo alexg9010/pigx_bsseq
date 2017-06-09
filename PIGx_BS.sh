@@ -143,7 +143,6 @@ mkdir -p ${path_OUT}"path_links/input"
 
 # link to reference genome:
 ln -sn ${path_refG} ${path_OUT}"/path_links/refGenome" 2>/dev/null
-
 # create file links:
 scripts/create_file_links.py $path2configfile 
 
