@@ -22,6 +22,11 @@ tablesheet="test_dataset/TableSheet_test.csv"
 path2configfile="./config.json"
 path2programsJSON="test_dataset/PROGS.json"
 
+#=========== DEFAULT PARAMETERS ============#
+
+createConfig=false
+warn=false
+
 #=========== PARSE PARAMETERS ============#
 
 usage="
@@ -55,7 +60,7 @@ Options:
 
 "
 
-createConfig=false
+
 
 # https://stackoverflow.com/questions/192249/how-do-i-parse-command-line-arguments-in-bash
 while [[ $# -gt 0 ]]; do
@@ -120,8 +125,8 @@ if [ ! -f $path2configfile ]
   elif $createConfig
     then
      scripts/create_configfile.py $tablesheet $path2configfile $path2programsJSON
-  else    
-    echo "${warning}"
+  else
+    warn=true
 fi
  
 
@@ -163,6 +168,9 @@ pathout=$( python -c "import sys, json; print(json.load(sys.stdin)['PATHOUT'])" 
 
 snakemake -s BSseq_pipeline.py --configfile $path2configfile -d $pathout $snakeparams
 
-
+if ${warn}
+  then
+    echo $warning
+fi
 
 
