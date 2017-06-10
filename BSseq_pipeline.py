@@ -249,6 +249,7 @@ rule bismark_genome_preparation:
     shell:
         nice("{BISMARK_GENOME_PREPARATION} {params} {input} 2> {log}")
 
+
 # ==========================================================================================
 # post-trimming quality control
 
