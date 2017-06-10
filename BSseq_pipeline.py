@@ -236,22 +236,22 @@ rule bismark_pe:
 # ==========================================================================================
 # generate reference genome:
 
-# rule bismark_genome_preparation:
-#     input:
-#         GENOMEPATH
-#     output:
-#         GENOMEPATH+"Bisulfite_Genome/CT_conversion/genome_mfa.CT_conversion.fa",
-#         GENOMEPATH+"Bisulfite_Genome/GA_conversion/genome_mfa.GA_conversion.fa"
-#     params:
-#         bismark_genome_preparation_args = config.get("bismark_genome_preparation",""),
-#         pathToBowtie = "--path_to_bowtie "+ os.path.dirname(BOWTIE2) ,
-#         useBowtie2 = "--bowtie2 ",
-#         verbose = "--verbose "
-#     log:
-#         'bismark_genome_preparation_'+VERSION+'.log'
-#     message: """ --------  converting {VERSION} Genome into Bisulfite analogue ------- """
-#     shell:
-#         "nice -"+str(NICE)+" {BISMARK_GENOME_PREPARATION} {params} {input} 2> {log}"
+rule bismark_genome_preparation:
+    input:
+        GENOMEPATH
+    output:
+        GENOMEPATH+"Bisulfite_Genome/CT_conversion/genome_mfa.CT_conversion.fa",
+        GENOMEPATH+"Bisulfite_Genome/GA_conversion/genome_mfa.GA_conversion.fa"
+    params:
+        bismark_genome_preparation_args = config.get("bismark_genome_preparation",""),
+        pathToBowtie = "--path_to_bowtie "+ os.path.dirname(BOWTIE2) ,
+        useBowtie2 = "--bowtie2 ",
+        verbose = "--verbose "
+    log:
+        'bismark_genome_preparation_'+VERSION+'.log'
+    message: """ --------  converting {VERSION} Genome into Bisulfite analogue ------- """
+    shell:
+        "nice -"+str(NICE)+" {BISMARK_GENOME_PREPARATION} {params} {input} 2> {log}"
 
 # ==========================================================================================
 # post-trimming quality control
