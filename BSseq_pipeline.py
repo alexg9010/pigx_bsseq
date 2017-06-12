@@ -20,7 +20,7 @@ include   : "./rules/post_mapping.rules"
 include   : "./scripts/func_defs.py"
 
 #---------------------------     LIST THE OUTPUT DIRECTORIED AND SUBDIRECTORIED TO BE PRODUCED     ------------------------------
-
+DIR_xmethed='07_xmethed/'
 DIR_sorted='06_sorted/'
 DIR_mapped='04_mapped/'
 DIR_deduped='05_deduped/'
@@ -84,8 +84,11 @@ OUTPUT_FILES = [
                 [ expand ( list_files_dedupe(DIR_deduped, config["SAMPLES"][sampleID]["fastq_name"] )  ) for sampleID in config["SAMPLES"]  ],                                
 
                 #               ==== rule 06 sorting ======
-                [ expand ( list_files_sortbam(DIR_sorted, config["SAMPLES"][sampleID]["fastq_name"] )  ) for sampleID in config["SAMPLES"]  ],
+                #[ expand ( list_files_sortbam(DIR_sorted, config["SAMPLES"][sampleID]["fastq_name"] )  ) for sampleID in config["SAMPLES"]  ],
                 
+                #               ====rule 07 extract_methylation ======           
+                [ expand ( list_files_xmeth( DIR_xmethed, config["SAMPLES"][sampleID]["fastq_name"] )  ) for sampleID in config["SAMPLES"]  ]  
+
                 # ==================  FINAL REPORT =========================
                 # TODO: This needs to be editted once we determine what final reports we want to export!
 		#            [ expand ( Annot(DIR_annot, config["SAMPLES"][sampleID]["fastq_name"], VERSION )) for sampleID in config["SAMPLES"]  ]
@@ -93,7 +96,7 @@ OUTPUT_FILES = [
 
 ]
 
-
+# print("OUTPUT_FILES=")
 # ==============================================================================================================
 #
 #                                         BEGIN RULES    
@@ -104,7 +107,49 @@ OUTPUT_FILES = [
 rule all:
     input:
         OUTPUT_FILES
-
+# ==========================================================================================
+rule bismark_se_methylation_extractor:
+    input:
+        DIR_deduped+"{sample}_se_bt2.deduped.bam"
+    output:
+        expand(DIR_xmethed+"{{sample}}_se_bt2.deduped.{file}.gz",  file=["bedGraph","bismark.cov","CpG_report.txt"]),
+        DIR_xmethed+"{sample}_se_bt2.deduped.M-bias.txt",
+        DIR_xmethed+"{sample}_se_bt2.deduped.M-bias_R1.png",
+        DIR_xmethed+"{sample}_se_bt2.deduped_splitting_report.txt"
+    threads: 4
+    params:
+        se = "--single-end",
+        gz = "--gzip",
+        cReport = "--cytosine_report",
+        bg = "--bedgraph",
+        genomeFolder = "--genome_folder " + GENOMEPATH,
+        outdir = "--output "+DIR_xmethed+""
+    log: DIR_xmethed+"{sample}_bismark_methylation_extraction.log"
+    message: """--------------  Extracting  Methylation Information --------------- \n"""
+    shell:
+        "nice -"+str(NICE)+" {BISMARK_METHYLATION_EXTRACTOR} {params} --multicore {threads} {input} 2> {log}"
+#-----------------
+rule bismark_pe_methylation_extractor:
+    input:
+        DIR_deduped+"{sample}_1_val_1_bt2.deduped.bam"
+    output:
+        expand(DIR_xmethed+"{{sample}}_1_val_1.deduped.{file}.gz",  file=["bedGraph","bismark.cov","CpG_report.txt"]),
+        DIR_xmethed+"{sample}_1_val_1_bt2.deduped.M-bias.txt",
+        DIR_xmethed+"{sample}_1_val_1_bt2.deduped.M-bias_R1.png",
+        DIR_xmethed+"{sample}_1_val_1_bt2.deduped_splitting_report.txt"    
+    threads: 4
+    params:
+        pe = "--paired-end",
+        gz = "--gzip",
+        cReport = "--cytosine_report",
+        bg = "--bedgraph",
+        
+        genomeFolder = "--genome_folder " + GENOMEPATH,
+        outdir = "--output "+DIR_xmethed+""
+    log: DIR_xmethed+"{sample}_bismark_methylation_extraction.log"
+    message: """--------------  Extracting  Methylation Information --------------- \n"""
+    shell:
+        "nice -"+str(NICE)+" {BISMARK_METHYLATION_EXTRACTOR} {params} --multicore {threads} {input} 2> {log}"
 # ==========================================================================================
 # sort the bam file:
 
