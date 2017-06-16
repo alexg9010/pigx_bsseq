@@ -70,6 +70,9 @@ SAMTOOLS                       =  GTOOLBOX+config["PROGS"]["SAMTOOLS"]
 # --- last rule that you wish to have executed.
 
 
+
+print(config)
+
 OUTPUT_FILES = [
                 #               ==== rule 01 raw QC    =========
                 [ expand (list_files_rawQC(DIR_rawqc, config["SAMPLES"][sample]["files"], config["SAMPLES"][sample]["SampleID"] )  ) for sample in config["SAMPLES"]  ],
