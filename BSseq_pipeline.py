@@ -241,7 +241,7 @@ rule fastqc_after_trimming_se:
    	    DIR_posttrim_QC+"{sample}_trimmed_fastqc.log"
     message: """ ------------  Quality checking trimmmed single-end data with Fastqc ------------- """
     shell:
-        "nice -"+str(NICE)+" {FASTQC} {params.outdir} {input} 2> {log}"
+        "nice -"+str(NICE)+" {FASTQC} {params.outdir} {input} &> {log}"
 #--------
 rule fastqc_after_trimming_pe:
     input:
@@ -259,7 +259,7 @@ rule fastqc_after_trimming_pe:
    	    DIR_posttrim_QC+"{sample}_trimmed_fastqc.log"
     message: """ ------------  Quality checking trimmmed paired-end data with Fastqc ------------- """
     shell:
-        "nice -"+str(NICE)+" {FASTQC} {params.outdir} {input} 2> {log}"
+        "nice -"+str(NICE)+" {FASTQC} {params.outdir} {input} &> {log}"
 
 # ==========================================================================================
 # trim the reads
@@ -281,7 +281,7 @@ rule trimgalore_se:
     message:
        " ---------  Trimming raw single-end read data using {TRIMGALORE} -------  "
     shell:
-       "nice -"+str(NICE)+" {TRIMGALORE} {params} {input.file} 2> {log}"
+       "nice -"+str(NICE)+" {TRIMGALORE} {params} {input.file} &> {log}"
 
 #-----------------------
 rule trimgalore_pe:
@@ -305,7 +305,7 @@ rule trimgalore_pe:
     message:
         " ---------  Trimming raw paired-end read data using {TRIMGALORE} -------  "
     shell:
-        "nice -"+str(NICE)+" {TRIMGALORE} {params} {input.files} 2> {log}"
+        "nice -"+str(NICE)+" {TRIMGALORE} {params} {input.files} &> {log}"
 
 # ==========================================================================================
 # raw quality control
@@ -324,4 +324,4 @@ rule fastqc_raw: #----only need one: covers BOTH PE and SE cases.
         DIR_rawqc+"{sample}_fastqc.log"
     message: """ ----------  Quality checking raw read data with {FASTQC}.  --------------   """
     shell:
-        "nice -"+str(NICE)+" {FASTQC} {params.outdir}  {input} 2> {log}"
+        "nice -"+str(NICE)+" {FASTQC} {params.outdir}  {input} &> {log}"
