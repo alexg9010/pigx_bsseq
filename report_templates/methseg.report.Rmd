@@ -29,7 +29,7 @@ grFile    <- params$grdata
 
 ## Segmentation Report
 
-The segmentation based on methylation provides a way to compress the information from base-pair into regional resolution, allowing the detection of regions with similar methylation values, that might be interesting for further investigations.
+The segmentation based on methylation provides a way to compress the information from base-pair into regional resolution, allowing the smoothing of the genome wide signal and enabling the detection of regions with similar methylation values, that might be interesting for further investigations.
 
 ```{r, include=FALSE,warning=FALSE}
 
@@ -64,8 +64,8 @@ inputParams <- data.frame(Parameters = paramsDesc,
                           Values = paramsValues,
                           stringsAsFactors = FALSE)
 #params
-#datatable(inputParams,options = list(dom = 't'),rownames = FALSE)
-knitr::kable(inputParams)
+datatable(inputParams,options = list(dom = 't'),rownames = FALSE)
+# knitr::kable(inputParams)
 ```
 
 ### Segmentation of methylation profile
@@ -78,7 +78,9 @@ The segmentation of the methylation profile is done using the methSeg() function
 
     ## Segmentation
     res.gr = methSeg(methRaw,diagnostic.plot=TRUE)
+```
 
+```{r}
     ## convert to data.frame
     res.df <- as.data.frame(res.gr)
     res.df$seg.mean <- round(res.df$seg.mean,digits = 3)
@@ -93,6 +95,7 @@ The segmentation of the methylation profile is done using the methSeg() function
               caption = "Resulting Segments",
               rownames = FALSE)
 ```
+
 
 The GRanges object is saved to enable fast loading for further analysis.
 ```{r}

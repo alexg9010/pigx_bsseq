@@ -27,9 +27,10 @@ assembly  <- params$assembly
 refgenes.file <- params$refseqfile
 ```
 
-## Annotation Report
+## Annotation
 
-The annotation with 
+The annotation of the identified regions with genomic features allows to get a better understanding and characterization of detected regions. 
+
 
 ```{r, include=FALSE,warning=FALSE}
 
@@ -38,7 +39,7 @@ The annotation with
     library("GenomicRanges")
     require("AnnotationHub")
     require("rtracklayer")
-
+    library("DT")
   })
 ```
 
@@ -47,6 +48,9 @@ The annotation with
 
     library("genomation")
     library("GenomicRanges")
+    require("AnnotationHub")
+    require("rtracklayer")
+    library("DT")
 
 ```
 
@@ -67,8 +71,8 @@ inputParams <- data.frame(Parameters = paramsDesc,
                           Values = paramsValues,
                           stringsAsFactors = FALSE)
 #params
-#datatable(inputParams,options = list(dom = 't'),rownames = FALSE)
-knitr::kable(inputParams)
+datatable(inputParams,options = list(dom = 't'),rownames = FALSE)
+# knitr::kable(inputParams)
 ```
 
 

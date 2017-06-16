@@ -33,8 +33,10 @@ rdatafile <- params$rdata
 ```
 
 
-## Methylation Calling Report
+## Methylation Calling
 
+After sequencing and alignment of the bisulfite treated DNA we can get the methylation status of a base. 
+We calculate a percentage value that determines how many of the bases that are aligning to a given cytosine location in the genome have actual C bases in the reads. Since bisulfite treatment leaves methylated Cs intact, that percentage will give us percent methylation score on that base.
 
 <!-- this is the local dir: `r  getwd()` -->
 <!-- Here I need to write a short section why we do this -->
@@ -44,6 +46,7 @@ rdatafile <- params$rdata
   suppressPackageStartupMessages(expr = {
   ## load methylKit
     library("methylKit",warn.conflicts = FALSE,quietly = TRUE)
+    library("DT")
   })
 ```
 
@@ -72,8 +75,8 @@ inputParams <- data.frame(Parameters = paramsDesc,
                           Values = paramsValues,
                           stringsAsFactors = FALSE)
 #params
-#datatable(inputParams,options = list(dom = 't'),rownames = FALSE)
-knitr::kable(inputParams)
+datatable(inputParams,options = list(dom = 't'),rownames = FALSE)
+# knitr::kable(inputParams)
 ```
 
 
@@ -83,7 +86,7 @@ knitr::kable(inputParams)
 
 We first extract the methylation calls from the sequence alignment produced by the bisulfite mapper [Bismark](https://www.bioinformatics.babraham.ac.uk/projects/bismark/) [@krueger_bismark:_2011] using the `processBismarkAln()` function of [methylKit](https://bioconductor.org/packages/release/bioc/html/methylKit.html) [@methylKit2012]  a package for the the analysis of DNA methylation profiles. In order to ensure data quality we require at least `r mincov` bases coverage and a mapping quality above `r minqual`. 
 
-```{r, message=FALSE}
+```{r, message=FALSE,warning=FALSE}
 
     ## extract the sample id from sample file 
     # sample_id = unlist(strsplit(basename(input),split = "_"))[1]

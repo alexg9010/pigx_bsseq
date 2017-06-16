@@ -170,7 +170,6 @@ snakemake -s BSseq_pipeline.py --configfile $path2configfile -d $pathout $snakep
 
 if ${warn}
   then
-    echo $warning
+    echo "${warning}"
 fi
-
 

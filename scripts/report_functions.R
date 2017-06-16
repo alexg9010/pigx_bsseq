@@ -61,7 +61,7 @@ render2Markdown <- function(reportFile,
       #includes = list(in_header = pathToLogo)
     ),
     params = report.params,
-    quiet = FALSE,
+    quiet = TRUE,
     clean = TRUE,
     envir = new.env()
   )
