@@ -144,26 +144,30 @@ progs_md5="$(dirname config.json)/.pigx.pr.md5"
 if [ ! -f $path2configfile ]
   then
     if [ -z $tablesheet ]
-    then echo "Tablesheet mising, quiting now ... "; exit; fi
+      then echo "Tablesheet mising, quiting now ... "; exit; fi
     if [ -z $path2programsJSON ] 
-    then echo "Paths to Programs missing, quitting now ... "; exit; fi
+      then echo "Paths to Programs missing, quitting now ... "; exit; fi
     echo "Generating config file ... "
     scripts/create_configfile.py $tablesheet $path2configfile $path2programsJSON
     writemd5 "$tablesheet" "$tablesheet_md5"
     writemd5 "$path2programsJSON" "$(dirname config.json)/.pigx.pr.md5"
   elif $createConfig
     then
+      if [ -z $tablesheet ]
+        then echo "Tablesheet mising, quiting now ... "; exit; fi
+      if [ -z $path2programsJSON ] 
+        then echo "Paths to Programs missing, quitting now ... "; exit; fi
       echo "Generating config file ... "
       scripts/create_configfile.py $tablesheet $path2configfile $path2programsJSON
       writemd5 "$tablesheet" "$tablesheet_md5"
       writemd5 $path2programsJSON "$(dirname config.json)/.pigx.pr.md5"
 else
   ## if one or both of the tables are given, we generate the config file and 
-  ## update the md5 hash of the input tables to files if their content has changed.
+  ## update the md5 hash of the input tables if their content has changed.
   if [ ! -z $tablesheet ] 
     then 
       writemd5 $tablesheet "${tablesheet_md5}.test"
-      if [[ $(cmp --silent "${tablesheet_md5}.test" $tablesheet_md5) ]] 
+      if ! cmp --silent "${tablesheet_md5}.test" $tablesheet_md5  
         then 
           cat "${tablesheet_md5}.test"
           cat $tablesheet_md5
@@ -175,7 +179,7 @@ else
   if [ ! -z $path2programsJSON ] 
     then 
       writemd5 $path2programsJSON "${progs_md5}.test"
-      if [[ $(cmp --silent "${progs_md5}.test" $progs_md5) ]]  
+      if ! cmp --silent "${progs_md5}.test" $progs_md5  
         then 
           echo "Program paths changed, now updating config file!";  
           scripts/create_configfile.py "$(cut -f2 -d" " $tablesheet_md5)" $path2configfile $path2programsJSON
