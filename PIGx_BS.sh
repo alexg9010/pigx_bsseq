@@ -18,9 +18,9 @@
 
 
 # #===== DEFAULT PATHS ===== #
-tablesheet="test_CElegans/TableSheet_test.csv"
+tablesheet="input_files/TableSheet_test.csv"
 path2configfile="config.json"
-path2programsJSON="test_CElegans/PROGS.json"
+path2programsJSON="input_files/PROGS.json"
 path2clusterconfig="cluster_conf.json"
 
 #===== PATHS SPECIFIC TO THE R-SCRIPT FOR DECONVOLUTION:
