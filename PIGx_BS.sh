@@ -18,9 +18,9 @@
 
 
 # #===== DEFAULT PATHS ===== #
-tablesheet="test_CElegans/TableSheet_test.csv"
+tablesheet="input_files/TableSheet_test.csv"
 path2configfile="config.json"
-path2programsJSON="test_CElegans/PROGS.json"
+path2programsJSON="input_files/PROGS.json"
 path2clusterconfig="cluster_conf.json"
 
 #===== PATHS SPECIFIC TO THE R-SCRIPT FOR DECONVOLUTION:
@@ -61,6 +61,7 @@ Options:
 "
 
 createConfig=true
+# unlike master branch, I ALWAYS overwrite the config file every timet the program is called. 
 
 # https://stackoverflow.com/questions/192249/how-do-i-parse-command-line-arguments-in-bash
 while [[ $# -gt 0 ]]; do
@@ -76,11 +77,10 @@ while [[ $# -gt 0 ]]; do
             path2configfile="$1"
             shift
             ;;
-#    ---- createConfig is now true by default -----
-#        -C|--create-config)
-#            createConfig=true
-#            shift
-#            ;;
+        -C|--create-config)
+            createConfig=true
+            shift
+            ;;
         -p|--programs)
             path2programsJSON="$1"
             shift
@@ -117,9 +117,9 @@ You can safely ignore this warning, unless changes were made to either:
     programs: ${path2programsJSON}
     
 If that is the case, please remove ${path2configfile} or use the '-C/--create-config' option,
-to enforce the recreation of the config file.
+to force the recreation of the config file.
 "
- 
+  
 if [ ! -f $path2configfile ]
   then
     scripts/create_configfile.py $tablesheet $path2configfile $path2programsJSON
@@ -160,7 +160,7 @@ mkdir -p ${path_OUT}"path_links/input"
 # create links within the output folder that point directly to the 
 # reference genome, as well as to each sample input file  
 # so that it's clear where the source data came from.
-# N.B. Any previous links of the same name are over-written.
+# N.B. Any previously existing links will be kept in place, and no warning will be issued if this is the case. 
 
 # link to reference genome:
 ln -sn ${path_refG}     ${path_OUT}"/path_links/refGenome" 2>/dev/null
@@ -170,6 +170,7 @@ ln -sn ${path_SIGMAT}   ${path_OUT}"/path_links/SIGMAT"    2>/dev/null
 
 # link to folder where I keep the extra Rscripts.
 ln -sn ${path_Rscripts} ${path_OUT}"path_links/Rscripts"   2>/dev/null
+
 
 
 # create file links:
@@ -197,7 +198,7 @@ python scripts/rules_cluster.py  bismark_pe_methex  ${bismark_pe_threads}  ${qna
 #========================================================================================
 #----------  NOW START RUNNING SNAKEMAKE:  ----------------------------------------------
 
-# I decided ultimately not to use drmaa for snakemake here (qsub seems to work fine and is less complicated). 
+# I decided against using drmaa for snakemake here (qsub seems to work fine and is less complicated). 
 # Nevertheless, I'm leaving these lines commented here, in case I want to revisit this choice.
 #
 # --drmaa  "qsub -V -l h_vmem=${MEM} -l h_rt=${RUNTIME}  -pe smp ${NUMTHREADS}"
@@ -216,6 +217,4 @@ if [ ${cluster_run} = true ] || [ ${cluster_run} = TRUE ]
   else
     echo "ERROR: cluster_run string interpreted as: " ${cluster_run} "-- this is not understood to be either true or false (all characters in the word must be the same case --UPPER or lower, but not MiXEd). Exiting."
 fi
-
-#  --jobs ${numjobs} 
 
