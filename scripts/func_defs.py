@@ -85,17 +85,4 @@ def list_files_xmeth(PATH, files):
     else:
         raise Exception("=== ERROR: file list is neither 1 nor 2 in length. STOP! ===")   
 
-# --------------------------------
-
-def Nproc(N):
-   return lambda x: N*x
-N_cores            = Nproc(1)
-N_threads_mostjobs = Nproc(1)
-N_threads_bismark  = Nproc(2)
-
-def string_MEM(s):                                                                                                     
-   return lambda x: str(x)+s 
-
-lambdaMEM=string_MEM("G")
-
 
