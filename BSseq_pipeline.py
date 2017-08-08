@@ -44,8 +44,11 @@ include   : "./scripts/func_defs.py"
 
 #---------------------------------     DEFINE PATHS AND FILE NAMES:  ----------------------------------
 
-PATHIN          = "path_links/input/"      #--- location of the data files to be imported
-GENOMEPATH      = "path_links/refGenome/"     #--- where the reference genome being mapped to is stored
+PATHIN          = "path_links/input/"      #this doesnt work
+GENOMEPATH      = "path_links/refGenome/"     #this doesnt work
+#PATHIN          = config["PATHIN"]
+#GENOMEPATH      = config["GENOMEPATH"]     #--- where the reference genome being mapped to is stored
+
 GTOOLBOX        = config["GTOOLBOX"]       #--- where the programs are stored to carry out the necessary operations
 
 VERSION         = config["GENOME_VERSION"]  #--- version of the genome being mapped to.
