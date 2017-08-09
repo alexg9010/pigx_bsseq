@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.5
+#!/usr/bin/env python3
 
 #============================================================================================================
 # SNAKEMAKE FILE WRITTEN BY THE AKALIN GROUP AT MDC, BERLIN, 2017
@@ -73,39 +73,33 @@ SAMTOOLS                       =  GTOOLBOX+config["PROGS"]["SAMTOOLS"]
 # --- last rule that you wish to have executed.
 
 
-
-print(config)
-
 OUTPUT_FILES = [
                 #               ==== rule 01 raw QC    =========
-                [ expand (list_files_rawQC(DIR_rawqc, config["SAMPLES"][sample]["files"], config["SAMPLES"][sample]["SampleID"] )  ) for sample in config["SAMPLES"]  ],
+                #[ expand (list_files_rawQC(DIR_rawqc, config["SAMPLES"][sample]["files"], config["SAMPLES"][sample]["SampleID"] )  ) for sample in config["SAMPLES"]  ],
 
                 #----RULE 2 IS ALWAYS EXECUTED, TRIMMING IS A PREREQUISITE FOR SUBSEQUENT RULES ----
                 #               ==== rule 02 trimgalore ======
                 #[ expand ( list_files_TG( DIR_trimmed, config["SAMPLES"][sample]["files"], config["SAMPLES"][sample]["SampleID"] ) ) for sample in config["SAMPLES"]  ],
                 
                 #               ==== rule 03 posttrim_QC_ ======
-                [ expand ( list_files_posttrim_QC(DIR_posttrim_QC, config["SAMPLES"][sample]["files"] , config["SAMPLES"][sample]["SampleID"]  )  ) for sample in config["SAMPLES"]  ],
+                #[ expand ( list_files_posttrim_QC(DIR_posttrim_QC, config["SAMPLES"][sample]["files"] , config["SAMPLES"][sample]["SampleID"]  )  ) for sample in config["SAMPLES"]  ],
                 #--- fastQC output files are not needed downstream and need to be called explicitly.
                 
                 #               ==== rule 04 mapping ======
                 #[ expand ( list_files_bismark(DIR_mapped, config["SAMPLES"][sample]["files"], config["SAMPLES"][sample]["SampleID"]   )  ) for sample in config["SAMPLES"]  ],
               
                 #               ==== rule 05 deduplication ======
-                [ expand ( list_files_dedupe(DIR_deduped, config["SAMPLES"][sample]["files"], config["SAMPLES"][sample]["SampleID"]  )  ) for sample in config["SAMPLES"]  ],                                
+                #[ expand ( list_files_dedupe(DIR_deduped, config["SAMPLES"][sample]["files"], config["SAMPLES"][sample]["SampleID"]  )  ) for sample in config["SAMPLES"]  ],                                
 
                 #               ==== rule 06 sorting ======
-                [ expand ( list_files_sortbam(DIR_sorted, config["SAMPLES"][sample]["files"], config["SAMPLES"][sample]["SampleID"]  )  ) for sample in config["SAMPLES"]  ],
+                #[ expand ( list_files_sortbam(DIR_sorted, config["SAMPLES"][sample]["files"], config["SAMPLES"][sample]["SampleID"]  )  ) for sample in config["SAMPLES"]  ],
                 
                 #               ==== rule Bam processing ======
-                [ expand ( bam_processing(METHCALLDIR, config["SAMPLES"][sample]["files"] )  ) for sampleID in config["SAMPLES"]  ], #had to add it to call bam_methCall for diff meth rule
-                
-                #               ==== rule Bam processing ======
-                [ expand ( bam_processing(METHCALLDIR, config["SAMPLES"][sampleID]["fastq_name"] )  ) for sampleID in config["SAMPLES"]  ], #had to add it to call bam_methCall for diff meth rule
-                
+                #[ expand ( bam_processing(METHCALLDIR, config["SAMPLES"][sample]["files"], sample )  ) for sample in config["SAMPLES"]  ], # TODO: had to add this line to call bam_methCall for diff meth rule
+
                 # ==================  FINAL REPORT =========================
                 # TODO: This needs to be editted once we determine what final reports we want to export!
-	            	#[ expand ( Annot(DIR_annot, config["SAMPLES"][sample]["files"], VERSION )) for sample in config["SAMPLES"]  ]
+	            	#[ expand ( Annot(DIR_annot, config["SAMPLES"][sample]["files"], VERSION, sample )) for sample in config["SAMPLES"]  ],
 		            # diff meth
 		            [ DIFFMETHDIR+"_".join(x)+".sorted_diffmeth.nb.html" for x in config["DIFF_METH"]  ],
 		            # annotation diff meth regions
@@ -114,6 +108,8 @@ OUTPUT_FILES = [
 
 ]
 
+print( OUTPUT_FILES  )
+
 
 #--- NICE gauges the computational burden, ranging from -19 to +19.
 #--- The more "nice" you are, the more you allow other processes to jump ahead of you
@@ -121,8 +117,6 @@ OUTPUT_FILES = [
 def nice(cmd):
     return "nice -" + str(config["NICE"]) + " " + cmd
 
-print("OUTPUT_FILES")
-print(OUTPUT_FILES)
 
 # ==============================================================================================================
 #
@@ -238,22 +232,22 @@ rule bismark_pe:
 # ==========================================================================================
 # generate reference genome:
 
-rule bismark_genome_preparation:
-    input:
-        GENOMEPATH
-    output:
-        GENOMEPATH+"Bisulfite_Genome/CT_conversion/genome_mfa.CT_conversion.fa",
-        GENOMEPATH+"Bisulfite_Genome/GA_conversion/genome_mfa.GA_conversion.fa"
-    params:
-        bismark_genome_preparation_args = config.get("bismark_genome_preparation",""),
-        pathToBowtie = "--path_to_bowtie "+ os.path.dirname(BOWTIE2) ,
-        useBowtie2 = "--bowtie2 ",
-        verbose = "--verbose "
-    log:
-        'bismark_genome_preparation_'+VERSION+'.log'
-    message: fmt("converting {VERSION} Genome into Bisulfite analogue")
-    shell:
-        nice("{BISMARK_GENOME_PREPARATION} {params} {input} 2> {log}")
+# rule bismark_genome_preparation:
+#     input:
+#         GENOMEPATH
+#     output:
+#         GENOMEPATH+"Bisulfite_Genome/CT_conversion/genome_mfa.CT_conversion.fa",
+#         GENOMEPATH+"Bisulfite_Genome/GA_conversion/genome_mfa.GA_conversion.fa"
+#     params:
+#         bismark_genome_preparation_args = config.get("bismark_genome_preparation",""),
+#         pathToBowtie = "--path_to_bowtie "+ os.path.dirname(BOWTIE2) ,
+#         useBowtie2 = "--bowtie2 ",
+#         verbose = "--verbose "
+#     log:
+#         'bismark_genome_preparation_'+VERSION+'.log'
+#     message: fmt("converting {VERSION} Genome into Bisulfite analogue")
+#     shell:
+#         nice("{BISMARK_GENOME_PREPARATION} {params} {input} 2> {log}")
 
 
 # ==========================================================================================

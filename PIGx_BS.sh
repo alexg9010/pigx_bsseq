@@ -143,7 +143,7 @@ mkdir -p ${path_OUT}"path_links/input"
 ln -sfn ${path_refG} ${path_OUT}"/path_links/refGenome" 2>/dev/null
 
 # create file links:
-scripts/create_file_links.py $path2configfile 
+python scripts/create_file_links.py $path2configfile 
 
 
 #========================================================================================
@@ -152,6 +152,6 @@ scripts/create_file_links.py $path2configfile
 
 pathout=$( python -c "import sys, json; print(json.load(sys.stdin)['PATHOUT'])" < $path2configfile)
 
-snakemake -s BSseq_pipeline.py --configfile $path2configfile -d $pathout ${snakeparams:-}
+~/programs/bin/snakemake -s BSseq_pipeline.py --configfile $path2configfile -d $pathout ${snakeparams:-} ######################################TODOOOOOOOO
 
 
