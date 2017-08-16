@@ -1,3 +1,4 @@
+Sys.setenv(RSTUDIO_PANDOC="/usr/lib/rstudio-server/bin/pandoc")#####################################################REMOVE ITTTTTTTTTTTT
 ## Wrapper function to combine a set of precompiled Rmd scripts
 ## and render them as multiRmd report 
 
@@ -105,12 +106,14 @@ render2multireport <- function(final_output,
                                references=NULL,
                                sessioninfo=NULL,
                                self_contained=TRUE,
-                               clean=FALSE) {
+                               clean=FALSE,
+                               differential_methylation_reports=NULL) {
   
   
   meta.file <- list.files(path = finalreportdir,
                           pattern = "knitr_meta.rds",
                           full.names = TRUE)
+  
   
   if(!is.null(index) || !is.null(references) || !is.null(sessioninfo)){
     
@@ -209,7 +212,6 @@ render2multireport <- function(final_output,
   #                 to = paste0(finalreportdir,"/","finalreport",".Rmd"),  
   #                 orig = c(index,template.list,references))
   
-  
   merge_chapters2(unlist(meta),
                   to = paste0(finalreportdir,"/",bookdown:::with_ext(basename(final_output),".md"))#,
                   #orig = template.list
@@ -265,13 +267,14 @@ cat(paste(
 ))
 
 
-
 render2multireport(final_output = normalizePath(snakemake@output[["finalreport"]]),
                    finalreportdir = normalizePath(snakemake@params[["finalreportdir"]]),
                    #workdir = normalizePath(snakemake@params[["workdir"]]),
                    index = snakemake@input[["index"]],
                    references = snakemake@input[["references"]],
-                   sessioninfo = snakemake@input[["sessioninfo"]])
+                   sessioninfo = snakemake@input[["sessioninfo"]],
+                   differential_methylation_reports=normalizePath(snakemake@input[["diff_meth_reports"]])
+                   )
 
 # finalReportDir = "Final_Report/"
 # 
