@@ -73,7 +73,7 @@ OUTPUT_FILES = [
                 #[ expand ( list_files_TG( DIR_trimmed, config["SAMPLES"][sample]["files"], config["SAMPLES"][sample]["SampleID"] ) ) for sample in config["SAMPLES"]  ],
                 
                 #               ==== rule 03 posttrim_QC_ ======
-                [ expand ( list_files_posttrim_QC(DIR_posttrim_QC, config["SAMPLES"][sample]["files"] , config["SAMPLES"][sample]["SampleID"]  )  ) for sample in config["SAMPLES"]  ],
+                #[ expand ( list_files_posttrim_QC(DIR_posttrim_QC, config["SAMPLES"][sample]["files"] , config["SAMPLES"][sample]["SampleID"]  )  ) for sample in config["SAMPLES"]  ],
                 #--- fastQC output files are not needed downstream and need to be called explicitly.
                 
                 #               ==== rule 04 mapping ======
@@ -185,7 +185,8 @@ rule bismark_se:
     input:
         refconvert_CT = GENOMEPATH+"Bisulfite_Genome/CT_conversion/genome_mfa.CT_conversion.fa",
 	refconvert_GA = GENOMEPATH+"Bisulfite_Genome/GA_conversion/genome_mfa.GA_conversion.fa",
-        fqfile = DIR_trimmed+"{sample}_trimmed.fq.gz"
+        fqfile = DIR_trimmed+"{sample}_trimmed.fq.gz",
+        qc      = DIR_posttrim_QC+"{sample}_trimmed_fastqc.html"
     output:
         DIR_mapped+"{sample}_trimmed_bismark_bt2.bam",
         DIR_mapped+"{sample}_trimmed_bismark_bt2_SE_report.txt"
@@ -211,7 +212,9 @@ rule bismark_pe:
         refconvert_CT = GENOMEPATH+"Bisulfite_Genome/CT_conversion/genome_mfa.CT_conversion.fa",
 	refconvert_GA = GENOMEPATH+"Bisulfite_Genome/GA_conversion/genome_mfa.GA_conversion.fa",
         fin1 = DIR_trimmed+"{sample}_1_val_1.fq.gz",
-        fin2 = DIR_trimmed+"{sample}_2_val_2.fq.gz"
+        fin2 = DIR_trimmed+"{sample}_2_val_2.fq.gz",
+        qc   = [ DIR_posttrim_QC+"{sample}_1_val_1_fastqc.html",
+                 DIR_posttrim_QC+"{sample}_2_val_2_fastqc.html"]
     output:
         DIR_mapped+"{sample}_1_val_1_bismark_bt2_pe.bam",
         DIR_mapped+"{sample}_1_val_1_bismark_bt2_PE_report.txt"
